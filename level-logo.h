@@ -2,6 +2,7 @@
 #include "ilevel.h"
 #include "sprite.h"
 #include "graphics.h"
+#include "texter.h"
 
 class LevelLogo: public ILevel {
 	public:
@@ -11,5 +12,6 @@ class LevelLogo: public ILevel {
 		void render () override;
 
 		Sprite *logo;
-
+		Sprite *text;
+		Texter *texter;
 };

@@ -15,6 +15,8 @@ add_executable (one_in_taiga
 	shader-simple-2d-opengl.cpp
 	sprite.cpp
 	link-opengl.cpp
+	languages.cpp
+	texter.cpp
 	)
 
 pkg_check_modules (SDL2 "sdl2")

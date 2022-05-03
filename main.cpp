@@ -1,4 +1,5 @@
 #include "game.h"
+#include <clocale>
 
 int main (int argc, char **argv)
 {

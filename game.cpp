@@ -7,6 +7,7 @@
 #include "ilevel.h"
 #include "level-logo.h"
 #include <queue>
+#include "languages.h"
 
 std::queue<struct event *> events;
 
