@@ -1,5 +1,5 @@
-#include "sprite.h"
-#include "globals.h"
+#include <objects/sprite.h>
+#include <core/globals.h>
 #include <SDL2/SDL.h>
 
 Sprite::Sprite ()

@@ -1,9 +1,9 @@
 #pragma once
-#include "link.h"
-#include "glm/glm/glm.hpp"
-#include "glm/glm/ext/matrix_transform.hpp"
-#include "glm/glm/ext/matrix_clip_space.hpp"
-#include "shader.h"
+#include <core/link.h>
+#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <core/shader.h>
 
 
 class Object {

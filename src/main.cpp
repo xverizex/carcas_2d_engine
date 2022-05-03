@@ -1,4 +1,4 @@
-#include "game.h"
+#include <core/game.h>
 #include <clocale>
 
 int main (int argc, char **argv)

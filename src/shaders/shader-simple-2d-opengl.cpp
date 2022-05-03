@@ -1,6 +1,6 @@
-#include "shader-simple-2d-opengl.h"
+#include <shaders/shader-simple-2d-opengl.h>
 #include <GLES3/gl3.h>
-#include "sprite.h"
+#include <objects/sprite.h>
 
 ShaderSimple2DOpenGL::ShaderSimple2DOpenGL ()
 {

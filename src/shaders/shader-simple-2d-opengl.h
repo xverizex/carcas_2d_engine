@@ -1,5 +1,5 @@
 #pragma once
-#include "shader.h"
+#include <core/shader.h>
 #include <stdint.h>
 
 class ShaderSimple2DOpenGL: public Shader {

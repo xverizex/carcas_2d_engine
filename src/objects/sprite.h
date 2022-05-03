@@ -1,5 +1,5 @@
 #pragma once
-#include "object.h"
+#include <core/object.h>
 
 #define SPRITE_MAX_FRAMES             10
 

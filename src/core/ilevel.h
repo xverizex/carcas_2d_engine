@@ -4,9 +4,9 @@
 #include "events.h"
 #include <GLES3/gl3.h>
 #include "downloader.h"
-#include "glm/glm/glm.hpp"
-#include "glm/glm/ext/matrix_transform.hpp"
-#include "glm/glm/ext/matrix_clip_space.hpp"
+#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
 #include "shader.h"
 #include "shaders.h"
 

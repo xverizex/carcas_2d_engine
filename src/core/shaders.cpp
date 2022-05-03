@@ -7,10 +7,10 @@
 #include <GLES3/gl3.h>
 #include <stdint.h>
 #include <iostream>
-#include "shaders.h"
-#include "globals.h"
-#include "shader.h"
-#include "shader-simple-2d-opengl.h"
+#include <core/shaders.h>
+#include <core/globals.h>
+#include <core/shader.h>
+#include <shaders/shader-simple-2d-opengl.h>
 
 extern Shader **global_shader;
 

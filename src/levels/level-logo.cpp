@@ -1,6 +1,6 @@
-#include "level-logo.h"
-#include "languages.h"
-#include "text.h"
+#include <levels/level-logo.h>
+#include <core/languages.h>
+#include <text.h>
 
 extern Language global_language;
 

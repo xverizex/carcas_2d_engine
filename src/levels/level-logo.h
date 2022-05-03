@@ -1,8 +1,8 @@
 #pragma once
-#include "ilevel.h"
-#include "sprite.h"
-#include "graphics.h"
-#include "texter.h"
+#include <core/ilevel.h>
+#include <objects/sprite.h>
+#include <core/graphics.h>
+#include <core/texter.h>
 
 class LevelLogo: public ILevel {
 	public:

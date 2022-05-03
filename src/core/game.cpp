@@ -3,9 +3,9 @@
 #include <SDL2/SDL.h>
 #include <GLES3/gl3.h>
 #include "opengles.h"
-#include "levels.h"
+#include <levels/levels.h>
 #include "ilevel.h"
-#include "level-logo.h"
+#include <levels/level-logo.h>
 #include <queue>
 #include "languages.h"
 
