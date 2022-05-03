@@ -34,7 +34,7 @@ void Sprite::set_width (float width)
 	} else if (link->width > link->height) {
 		aspect = (float) link->width / (float) link->height;
 		w = width;
-		h = w * aspect;
+		h = w / aspect;
 	} else {
 		aspect = (float) link->height / (float) link->width;
 		w = width;

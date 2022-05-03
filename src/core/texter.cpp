@@ -216,7 +216,7 @@ Link *Texter::generate_link (wchar_t *message, int font_size, int width_constrai
 	}
 
 	int max_width = width_constraint > 0 ? width_constraint : get_sym_max_width (syms);
-	int max_height = get_sym_max_height (syms);
+	int max_height = font_size;//get_sym_max_height (syms);
 	int min_height = get_sym_min_height (syms);
 	int min = 90;
 
