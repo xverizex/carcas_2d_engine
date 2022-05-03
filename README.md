@@ -4,7 +4,7 @@ There is support features
 * display text
 
 # How to add resource file?
-Add to directory `assets` your file. Open the file `to_download.h" and fill by pattern.
+Add to directory `assets` your file. Open the file `to_download.h` and fill by pattern.
 ```
 #pragma once
 
