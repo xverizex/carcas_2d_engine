@@ -163,10 +163,21 @@ void LevelLogo::load ()
 {
         global_language.set_language (LANG_RUS);
 	...
-        text->link = texter->generate_link (global_language[TEXT_HELLO_WORLD], 18);
+        text->link = texter->generate_link (global_language[TEXT_HELLO_WORLD], 18, 0);
 	...
 }
 ```
+You can point a constraint for text. For example you can point 18 * 20.
+```
+void LevelLogo::load ()
+{
+        global_language.set_language (LANG_RUS);
+	...
+        text->link = texter->generate_link (global_language[TEXT_HELLO_WORLD], 18, 18 * 20);
+	...
+}
+```
+This is will restricted 20 words by font size troughout by width.
 # How to add new level?
 Implement `ILevel class`.
 ```

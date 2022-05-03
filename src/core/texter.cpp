@@ -48,7 +48,7 @@ static int get_sym_max_height (std::vector<Symbol> &s)
 	int max = 0;
 	int size = s.size();
 	for (int i = 0; i < size; i++) {
-		int r = s[i].height + s[i].height - s[i].top;
+		int r = s[i].height +  s[i].top;
 		if (max < r) max = r;
 	}
 
@@ -67,37 +67,49 @@ static int get_sym_min_height (std::vector<Symbol> &s)
 	return min;
 }
 
-static uint8_t *build_data (std::vector<Symbol> &s, int tw, int th)
+static uint8_t *build_data (std::vector<Symbol> &s, int tw, int th, int font_size, int count)
 {
-	uint8_t *data = new uint8_t[tw * th];
+	if (count == 0) count = 1;
+	uint8_t *data = new uint8_t[tw * th * count];
 
 	int size = s.size();
 	uint8_t *z = data;
-	memset (z, 0x0, tw * th);
-	for (int y = 0; y < th; y++) {
-		for (int i = 0; i < size; i++) {
-			int sz = s[i].width;
-			z += s[i].left;
-#if 0
-			if (s[i].offset > y) {
-				memset (z, 0x0, sz);
-				z += sz;
-				continue;
-			}
-#endif
-			if (s[i].min > y) {
-				memset (z, 0x0, sz);
-				z += sz;
-				continue;
-			}
-			if (s[i].y >= s[i].height) 
-				memset (z, 0x0, sz);
-			else
-				memcpy (z, &s[i].buf[s[i].y++ * sz], sz);
-			z += sz;
-
+	uint8_t *szz = data;
+	memset (z, 0x0, tw * th * count);
+	int curline = 0;
+	for (int i = 0; i < size; i++) {
+		szz += s[i].left + s[i].width;
+		if (s[i].line) {
+			curline++;
+			szz = &data[tw * font_size * curline];
+			z = szz;
+			szz += s[i].left + s[i].width;
 		}
+		z += s[i].left;
+		for (int y = 0; y < th; y++) {
+			int sz = s[i].width;
+			if (s[i].min > y) {
+				z += tw;
+				continue;
+			}
+			int qw = tw;
+			if (s[i].y >= s[i].height) {
+				break;
+			} else {
+				int index = s[i].y * sz;
+				for (int a = 0; a < sz; a++) {
+					if (s[i].buf[index] > 0x0) {
+						z[a] = s[i].buf[index];
+					}
+					index++;
+				}
+				s[i].y++;
+			}
+			z += tw;
+		}
+		z = szz;
 	}
+
 	return data;
 }
 
@@ -117,7 +129,7 @@ static uint8_t *build_texture (uint8_t *alpha, int max_width, int max_height)
 	return data;
 }
 
-Link *Texter::generate_link (wchar_t *message, int font_size)
+Link *Texter::generate_link (wchar_t *message, int font_size, int width_constraint)
 {
 	FT_Set_Char_Size (face, 0, font_size * dpii, 96, 96);
 
@@ -146,21 +158,28 @@ Link *Texter::generate_link (wchar_t *message, int font_size)
 
 		int total = width * height;
 		if (total == 0) {
+			is_space = 1;
+		}
+		if (is_space) {
 			width = font_size;
 			height = font_size;
 			total = width * height;
-			is_space = 1;
+			left = 0;
+			top = font_size;
+			sym.is_space = 1;
+			sym.buf = new uint8_t[total];
+			memset (sym.buf, 0x0, total);
+		} else {
+			sym.buf = new uint8_t[total];
+			sym.is_space = 0;
+			memcpy (sym.buf, bitmap.buffer, total);
 		}
 		sym.width = width;
 		sym.top = top;
 		sym.left = left;
 		sym.height = height;
 		sym.y = 0;
-		sym.buf = new uint8_t[total];
-		if (is_space)
-			memset (sym.buf, 0x0, total);
-		else
-			memcpy (sym.buf, bitmap.buffer, total);
+		sym.line = 0;
 
 		syms.push_back (sym);
 
@@ -168,7 +187,35 @@ Link *Texter::generate_link (wchar_t *message, int font_size)
 		pen_y += face->glyph->advance.y;
 	}
 
-	int max_width = get_sym_max_width (syms);
+	int count = 1;
+
+	int wi = 0;
+	int mi = 0;
+	for (int i = 0; i < syms.size (); i++) {
+		if (syms[i].is_space) {
+			mi = i;
+			wi += syms[i].width;
+			for (int ii = i + 1; ii < syms.size (); ii++) {
+				wi += syms[ii].width;
+				if ((width_constraint > 0) && (wi >= width_constraint)) {
+					syms[i + 1].line = 1;
+					i++;
+					count++;
+					wi = 0;
+					break;
+				} else if (syms[ii].is_space) {
+					i = ii - 1;
+					break;
+				}
+			}
+			if (i > mi) continue;
+		} else {
+			syms[i].line = 0;
+			wi += syms[i].width;
+		}
+	}
+
+	int max_width = width_constraint > 0 ? width_constraint : get_sym_max_width (syms);
 	int max_height = get_sym_max_height (syms);
 	int min_height = get_sym_min_height (syms);
 	int min = 90;
@@ -181,10 +228,10 @@ Link *Texter::generate_link (wchar_t *message, int font_size)
 
 	max_height += min;
 
-	int total = max_width * max_height;
-	uint8_t *alpha_data = build_data (syms, max_width, max_height);
-	uint8_t *data = build_texture (alpha_data, max_width, max_height);
-	Link *link = downloader_text_get_link (data, max_width, max_height);
+	int total = max_width * max_height * count;
+	uint8_t *alpha_data = build_data (syms, max_width, max_height, font_size, count);
+	uint8_t *data = build_texture (alpha_data, max_width, max_height * count);
+	Link *link = downloader_text_get_link (data, max_width, max_height * count);
 	delete[] alpha_data;
 	delete[] data;
 

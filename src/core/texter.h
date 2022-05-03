@@ -15,6 +15,8 @@ class Symbol {
 		int y;
 		int offset;
 		int min;
+		int is_space;
+		int line;
 		uint8_t *buf;
 };
 
@@ -24,5 +26,5 @@ class Texter {
 		FT_Face face;
 		Texter ();
 		~Texter ();
-		Link *generate_link (wchar_t *message, int font_size);
+		Link *generate_link (wchar_t *message, int font_size, int width_constraint);
 };
