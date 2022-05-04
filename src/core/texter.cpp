@@ -67,15 +67,17 @@ static int get_sym_min_height (std::vector<Symbol> &s)
 	return min;
 }
 
-static uint8_t *build_data (std::vector<Symbol> &s, int tw, int th, int font_size, int count)
+static uint8_t *build_data (std::vector<Symbol> &s, std::vector<int> &ww, int tw, int th, int font_size, int count, int min)
 {
+	int max = ww[ww.size() - 1];
+
 	if (count == 0) count = 1;
-	uint8_t *data = new uint8_t[tw * th * count];
+	uint8_t *data = new uint8_t[tw * font_size * count + max * tw];
 
 	int size = s.size();
 	uint8_t *z = data;
 	uint8_t *szz = data;
-	memset (z, 0x0, tw * th * count);
+	memset (z, 0x0, tw * th * count + max * tw);
 	int curline = 0;
 	for (int i = 0; i < size; i++) {
 		szz += s[i].left + s[i].width;
@@ -85,8 +87,9 @@ static uint8_t *build_data (std::vector<Symbol> &s, int tw, int th, int font_siz
 			z = szz;
 			szz += s[i].left + s[i].width;
 		}
+
 		z += s[i].left;
-		for (int y = 0; y < th; y++) {
+		for (int y = 0; y < th + s[i].min; y++) {
 			int sz = s[i].width;
 			if (s[i].min > y) {
 				z += tw;
@@ -220,18 +223,33 @@ Link *Texter::generate_link (wchar_t *message, int font_size, int width_constrai
 	int min_height = get_sym_min_height (syms);
 	int min = 90;
 
+	std::vector<int> ww;
+	int lm = 0;
+
 	for (int i = 0; i < syms.size(); i++) {
+		if (syms[i].line) {
+			ww.push_back (min);
+			lm++;
+			min = 0;
+		}
 		syms[i].offset = max_height - syms[i].height;
-		syms[i].min = max_height - syms[i].top;
-		if (min > syms[i].min) min = syms[i].min;
+		syms[i].min = font_size - syms[i].top;
+		if (min < syms[i].min) {
+			min = syms[i].min;
+		}
 	}
 
-	max_height += min;
+	//max_height += min;
+
+	int max = ww[ww.size() - 1];
+	printf ("max: %d\n", max);
+
+	max_height = font_size;
 
 	int total = max_width * max_height * count;
-	uint8_t *alpha_data = build_data (syms, max_width, max_height, font_size, count);
-	uint8_t *data = build_texture (alpha_data, max_width, max_height * count);
-	Link *link = downloader_text_get_link (data, max_width, max_height * count);
+	uint8_t *alpha_data = build_data (syms, ww, max_width, max_height, font_size, count, min);
+	uint8_t *data = build_texture (alpha_data, max_width, max_height * count + max);
+	Link *link = downloader_text_get_link (data, max_width, max_height * count + max);
 	delete[] alpha_data;
 	delete[] data;
 

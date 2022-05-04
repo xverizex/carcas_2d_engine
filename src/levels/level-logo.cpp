@@ -25,8 +25,8 @@ void LevelLogo::load ()
 	text = new Sprite ();
 	text->shader = global_shader[SHADER_MAIN];
 	text->link = texter->generate_link (global_language[TEXT_HELLO_WORLD], 18, 18 * 20);
-	text->set_pos (0.0f, -1.0f, 0.0f);
-	text->set_width (1.0f);
+	text->set_pos (0.0f, 0.0f, 0.0f);
+	text->set_width (2.0f);
 }
 
 void LevelLogo::handle_button (enum EVENT_TYPE type, int x, int y)
