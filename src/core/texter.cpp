@@ -4,6 +4,8 @@
 #ifdef __ANDROID__
 #include "SDL.h"
 #include <android/log.h>
+#else
+#include <SDL2/SDL.h>
 #endif
 
 static int dpii = 64;

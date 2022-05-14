@@ -1,6 +1,10 @@
 #include "opengles.h"
 #include "globals.h"
+#ifdef __ANDROID__
+#include "SDL.h"
+#else
 #include <SDL2/SDL.h>
+#endif
 #include <GLES3/gl3.h>
 #include "shaders.h"
 

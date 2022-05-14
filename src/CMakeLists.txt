@@ -19,7 +19,7 @@ add_executable (one_in_taiga
 	core/link-opengl.cpp
 	core/languages.cpp
 	core/texter.cpp
-	)
+        core/sound.cpp core/sound.h core/sound_linux.cpp core/sound_linux.h)
 
 pkg_check_modules (SDL2 "sdl2")
 pkg_check_modules (GL "glesv2")

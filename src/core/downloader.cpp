@@ -1,9 +1,5 @@
 #include <iostream>
-#ifdef WEB
 #include <GLES3/gl3.h>
-#else
-#include <GLES3/gl3.h>
-#endif
 #ifdef __ANDROID__
 #include "SDL.h"
 #else
