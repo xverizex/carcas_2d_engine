@@ -1,0 +1,5 @@
+/home/cf/code/one_in_taiga/build/CMakeFiles/edit_cache.dir
+/home/cf/code/one_in_taiga/build/CMakeFiles/rebuild_cache.dir
+/home/cf/code/one_in_taiga/build/src/CMakeFiles/one_in_taiga.dir
+/home/cf/code/one_in_taiga/build/src/CMakeFiles/edit_cache.dir
+/home/cf/code/one_in_taiga/build/src/CMakeFiles/rebuild_cache.dir
