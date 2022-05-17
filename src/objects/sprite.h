@@ -21,6 +21,7 @@ class Sprite: public Object {
 		void mirror_left () override;
 		void render () override;
 
+        glm::vec4 color;
 		glm::mat4x4 pos;
 		glm::mat4x4 ortho;
 		uint32_t *animations[SPRITE_MAX_FRAMES];

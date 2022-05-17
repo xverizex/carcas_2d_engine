@@ -33,16 +33,36 @@ void Sprite::set_width (float width)
 	float aspect = 0.0f;
 
 	if (link->width == link->height) {
-		w = width;
-		h = w;
+        if (global_width < global_height) {
+            w = width;
+            h = w;
+        } else {
+            w = width;
+            h = w;
+        }
+
 	} else if (link->width > link->height) {
-		aspect = (float) link->width / (float) link->height;
-		w = width;
-		h = w / aspect;
+        if (global_width < global_height) {
+            aspect = (float) link->width / (float) link->height;
+            w = width;
+            h = w / aspect;
+        } else {
+            aspect = (float) link->width / (float) link->height;
+            w = width;
+            h = w / aspect;
+        }
+
 	} else {
-		aspect = (float) link->height / (float) link->width;
-		w = width;
-		h = w * aspect;
+        if (global_width < global_height) {
+            aspect = (float) link->height / (float) link->width;
+            w = width;
+            h = w * aspect;
+        } else {
+            aspect = (float) link->height / (float) link->width;
+            w = width;
+            h = w * aspect;
+        }
+
 	}
 
 	set_size (w, h, 0);
@@ -52,19 +72,38 @@ void Sprite::set_height (float height)
 {
 	float aspect = 0.0f;
 
-	printf ("--%d %d\n", link->height, link->width);
-	if (link->height == link->width) {
-		h = height;
-		w = h;
-	} else if (link->height > link->width) {
-		aspect = (float) link->height / (float) link->width;
-		h = height;
-		w = h / aspect;
-	} else {
-		aspect = (float) link->width / (float) link->height;
-		h = height;
-		w = h * aspect;
-	}
+    if (link->width == link->height) {
+        if (global_width < global_height) {
+            h = height;
+            w = h;
+        } else {
+            h = height;
+            w = h;
+        }
+
+    } else if (link->width > link->height) {
+        if (global_width < global_height) {
+            aspect = (float) link->width / (float) link->height;
+            h = height;
+            w = h * aspect;
+        } else {
+            aspect = (float) link->width / (float) link->height;
+            h = height;
+            w = h * aspect;
+        }
+
+    } else {
+        if (global_width < global_height) {
+            aspect = (float) link->height / (float) link->width;
+            h = height;
+            w = h / aspect;
+        } else {
+            aspect = (float) link->height / (float) link->width;
+            h = height;
+            w = h / aspect;
+        }
+
+    }
 
 	set_size (w, h, 0);
 }
