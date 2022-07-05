@@ -77,8 +77,9 @@ void Sprite::set_height (float height)
             h = height;
             w = h;
         } else {
+	    aspect = (float) global_width / (float) global_height;
             h = height;
-            w = h;
+            w = h / aspect / aspect;
         }
 
     } else if (link->width > link->height) {
