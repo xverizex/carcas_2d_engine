@@ -12,7 +12,6 @@ add_executable (fishing_boy
 	core/game.cpp
 	core/globals.cpp
 	levels/level-logo.cpp
-	levels/level-swamp.cpp
 	core/opengles.cpp
 	core/shaders.cpp
 	shaders/shader-simple-2d-opengl.cpp
