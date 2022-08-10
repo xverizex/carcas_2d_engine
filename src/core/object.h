@@ -13,6 +13,8 @@ class Object {
 		float width;
 		float height;
 		float length;
+		uint64_t fact_width;
+		uint64_t fact_height;
 		float x;
 		float y;
 		float z;

@@ -10,6 +10,7 @@
 #include <levels/levels.h>
 #include "ilevel.h"
 #include <levels/level-logo.h>
+#include <levels/level-swamp.h>
 #include <queue>
 #include "languages.h"
 
@@ -19,33 +20,34 @@ static int static_sdl_thread (void *ptr)
 {
 	SDL_Event event;
 
-	struct event *ev = new struct event ();
+	Game *game = static_cast<Game *>(ptr);
+
+	struct event ev;
 
 	while (SDL_WaitEvent (&event)) {
 		switch (event.type) {
 			case SDL_MOUSEBUTTONDOWN:
 				{
 					SDL_MouseButtonEvent *m = (SDL_MouseButtonEvent *) &event;
-					ev->type = BUTTON_DOWN;
-					ev->x = m->x;
-					ev->y = m->y;
-					events.push (ev);
+					ev.type = BUTTON_DOWN;
+					ev.x = m->x;
+					ev.y = m->y;
+					//game->level[global_cur_level]->handle_button (ev->type, ev->x, ev->y);
 				}
 				break;
 			case SDL_MOUSEBUTTONUP:
 				{
 					SDL_MouseButtonEvent *m = (SDL_MouseButtonEvent *) &event;
-					ev->type = BUTTON_UP;
-					ev->x = m->x;
-					ev->y = m->y;
-					events.push (ev);
+					ev.type = BUTTON_UP;
+					ev.x = m->x;
+					ev.y = m->y;
+					game->level[global_cur_level]->handle_button (ev.type, ev.x, ev.y);
 				}
 				break;
 			default:
 				continue;
 		}
 
-		ev = new struct event ();
 	}
 
 	return 0;
@@ -62,10 +64,19 @@ void Game::init ()
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
 #else
-	global_width = 1080.0f;
-	global_height = 2340.0f;
+#if 1
+	SDL_DisplayMode display_mode;
+	SDL_GetDisplayMode (0, 0, &display_mode);
+	global_width = (float) display_mode.w;
+	global_height = (float) display_mode.h;
+
+	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
+#else
+	global_width = 1920.0f;
+	global_height = 1080.0f;
 
 	int flags = SDL_WINDOW_OPENGL;
+#endif
 #endif
 
 	global_aspect = global_height / global_width;
@@ -74,7 +85,7 @@ void Game::init ()
 
 	graphics = new OpenGLES ();
 
-	this->win = SDL_CreateWindow ("one_in_taiga",
+	this->win = SDL_CreateWindow ("fishing boy",
 			0, 0,
 			global_width,
 			global_height,
@@ -83,16 +94,32 @@ void Game::init ()
 
 	this->ctx = graphics->init (this->win);
 
-	SDL_CreateThread (static_sdl_thread, "static_sdl_thread", nullptr);
+	SDL_CreateThread (static_sdl_thread, "static_sdl_thread", this);
 }
+
+int global_power = 6;
+int global_power_width = 6;
 
 void Game::loop ()
 {
 
+	int height = 270;
+	int width = 480;
+	while (height < global_height) {
+		height *= 2;
+		global_power++;
+	}
+
+	while (width < global_height) {
+		width *= 2;
+		global_power_width++;
+	}
+
 	level = new ILevel *[LEVEL_N];
 	level[LEVEL_LOGO] = new LevelLogo ();
+	level[LEVEL_SWAMP] = new LevelSwamp ();
 
-	global_cur_level = LEVEL_LOGO;
+	global_cur_level = LEVEL_SWAMP;
 
 	level[global_cur_level]->load ();
 
@@ -104,13 +131,6 @@ void Game::loop ()
 
 		struct event *ev = nullptr;
 
-		if (!events.empty()) {
-			ev = events.front ();
-			events.pop ();
-			handle_event (ev);
-			delete ev;
-			ev = nullptr;
-		}
 		
 		level[global_cur_level]->render ();
 
