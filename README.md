@@ -38,11 +38,12 @@ Link *downloader_load (const enum TO_DOWNLOADS file)
 ```
 Now you are can to load this resource once and use it with some objects on scene.
 ```
-        logo = new Sprite ();
-        logo->shader = global_shader[SHADER_MAIN];
+        logo = new SpriteInt ();
+        logo->shader = global_shader[SHADER_MAIN_INT];
         logo->link = downloader_load (LINK_LOGO);
         logo->set_pos (0.0f, 0.0f, 0.0f);
-        logo->set_width (1.0f);
+        logo->calc_size (0);
+	logo->set_texture_index (0);
 ```
 # How to add own shader?
 Implement `class Shader`.
@@ -75,7 +76,7 @@ void ShaderSimple2DOpenGL::init (uint32_t program)
 
 void ShaderSimple2DOpenGL::render (void *data)
 {
-        Sprite *sp = static_cast<Sprite *>(data);
+        SpriteInt *sp = static_cast<SpriteInt *>(data);
 
         glUseProgram (this->program);
 
@@ -187,6 +188,7 @@ class ILevel {
                 virtual void load () = 0;
                 virtual void handle_button (enum EVENT_TYPE type, int x, int y) = 0;
                 virtual void render () = 0;
+		virtual void unload () = 0;
 };
 ```
 In `Game::loop` add a new level and point `global_cur_level` to start.
