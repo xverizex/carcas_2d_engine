@@ -78,7 +78,7 @@ void Game::init ()
 
 	graphics = new OpenGLES ();
 
-	this->win = SDL_CreateWindow ("fishing boy",
+	this->win = SDL_CreateWindow ("game",
 			0, 0,
 			global_width,
 			global_height,
@@ -128,9 +128,6 @@ void Game::loop ()
 
 	level = new ILevel *[LEVEL_N];
 	level[LEVEL_LOGO] = new LevelLogo ();
-	level[LEVEL_SWAMP] = new LevelSwamp ();
-	level[LEVEL_MAP] = new LevelMap ();
-	level[LEVEL_HOME] = new LevelHome ();
 
 
 #if 1
