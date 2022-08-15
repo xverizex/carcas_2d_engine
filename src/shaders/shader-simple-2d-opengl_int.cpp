@@ -25,7 +25,8 @@ void ShaderSimple2DOpenGLInt::render (void *data)
 	glUseProgram (this->program);
 
 	glActiveTexture (GL_TEXTURE0);
-	glBindTexture (GL_TEXTURE_2D, sp->link->tex[sp->cur_tex]);
+	glBindTexture (GL_TEXTURE_2D, sp->cur_tex);
+	//glBindTexture (GL_TEXTURE_2D, sp->link->tex[sp->cur_tex]);
 
 	glUniform1i (this->uniform_cur_texture, 0);
 	glUniformMatrix4fv (this->uniform_ortho, 1, GL_FALSE, &sp->ortho[0][0]);

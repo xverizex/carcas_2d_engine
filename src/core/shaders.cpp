@@ -11,6 +11,7 @@
 #include <core/globals.h>
 #include <core/shader.h>
 #include <shaders/shader-simple-2d-opengl.h>
+#include <shaders/shader-simple-2d-opengl_int.h>
 
 extern Shader **global_shader;
 
@@ -93,8 +94,14 @@ void init_shaders ()
 
 	for (int i = 0; i < TYPE_SHADERS_N; i++) {
 		switch (i) {
+#if 0
 			case SHADER_MAIN: program[i] = load_shader (SHADER_CONVERT_TO_VERT (SHADER_MAIN), SHADER_CONVERT_TO_FRAG (SHADER_MAIN));
 					  global_shader[i] = new ShaderSimple2DOpenGL ();
+					  global_shader[i]->init (program[i]);
+					  break;
+#endif
+			case SHADER_MAIN_INT: program[i] = load_shader (SHADER_CONVERT_TO_VERT (SHADER_MAIN), SHADER_CONVERT_TO_FRAG (SHADER_MAIN));
+					  global_shader[i] = new ShaderSimple2DOpenGLInt ();
 					  global_shader[i]->init (program[i]);
 					  break;
 		}

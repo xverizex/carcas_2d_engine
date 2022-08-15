@@ -2,7 +2,11 @@
 #include <wchar.h>
 #include <stdint.h>
 #include <vector>
+#ifdef __ANDROID__
 #include <ft2build.h>
+#else
+#include <ft2build.h>
+#endif
 #include FT_FREETYPE_H
 #include "link.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <core/object.h>
 
-#define SPRITE_MAX_FRAMES             10
+#define SPRITE_MAX_FRAMES             30
 
 class Sprite: public Object {
 	public:

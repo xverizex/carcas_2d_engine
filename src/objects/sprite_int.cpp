@@ -77,16 +77,19 @@ void SpriteInt::set_size (float width, float height, float length)
         link->v[17] = 0;
 }
 
-void SpriteInt::calc_size ()
+void SpriteInt::calc_size (int _pow)
 {
 	int gheight = 270;
-	int pow = 6;
+	int pow = 2;
+	int standard = 1080;
+
 	int gh = global_height;
 
-	while (gheight < gh) {
+	while (gheight < standard) {
 		gheight *= 2;
 		pow++;
 	}
+	pow += _pow;
 
 	fact_width = link->width * pow;
 	fact_height = link->height * pow;
@@ -149,12 +152,15 @@ void SpriteInt::set_animate_range (int index, int start, int end)
 {
 	int l = end - start;
 	int total = l;
-	if (l == 0) { end++; total++; }
+	{ end++; total++; }
 
 	animations[index] = new uint32_t[total];
+	indexes[index] = new uint32_t[total];
 	int in = 0;
-	for (int i = start; i < end; i++) {
-		animations[index][in++] = this->link->tex[i];
+	for (uint32_t i = start; i < end; i++) {
+		animations[index][in] = this->link->tex[i];
+		indexes[index][in] = i;
+		in++;
 	}
 	
 	frames[index] = total;
@@ -187,14 +193,16 @@ void SpriteInt::play_animate ()
 
 		uint32_t prev = this->cur_tex;
 		tt[play] += diff - cur_time;
-		cur_tex = animations[play][tt[play] / speed[play] % frames[play]];
+		int32_t tex_index = tt[play] / speed[play] % frames[play];
+		cur_tex = animations[play][tex_index];
+		cur_tex_index = indexes[play][tex_index];
 		if (cur_tex != animations[play][0] && once[play] == 1) once[play] = 2;
 		if (cur_tex == animations[play][0] && once[play] == 2) {
 			cur_tex = prev;
 			once[play] = 1;
-			play = -1;
 			is_stop = true;
 			tt[play] = 0L;
+			play = -1;
 			first_frame = true;
 		}
 		cur_time = diff;
@@ -207,4 +215,9 @@ void SpriteInt::render ()
 	play_animate ();
 
 	shader->render (this);
+}
+
+void SpriteInt::set_texture_index (int index) {
+	cur_tex = link->tex[index];
+	cur_tex_index = index;
 }

@@ -12,18 +12,16 @@
 #include <AL/alc.h>
 
 class Sound_linux: public Sound {
+	public:
     Sound_linux ();
     void init () override;
-    void set (char *file) override;
+    void set (char *file, int format, int freq) override;
     void play () override;
     void stop () override;
     bool is_no_play () override;
 
     uint32_t buffer[1];
     uint32_t size_b;
-
-    ALCdevice *device;
-    ALCcontext *ctx;
 };
 
 

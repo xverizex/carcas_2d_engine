@@ -1,7 +1,7 @@
 #pragma once
 
 enum TYPE_SHADER {
-	SHADER_MAIN,
+	SHADER_MAIN_INT,
 	TYPE_SHADERS_N
 };
 

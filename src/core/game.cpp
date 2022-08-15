@@ -11,6 +11,8 @@
 #include "ilevel.h"
 #include <levels/level-logo.h>
 #include <levels/level-swamp.h>
+#include <levels/level-map.h>
+#include <levels/level-home.h>
 #include <queue>
 #include "languages.h"
 
@@ -64,19 +66,10 @@ void Game::init ()
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
 #else
-#if 1
-	SDL_DisplayMode display_mode;
-	SDL_GetDisplayMode (0, 0, &display_mode);
-	global_width = (float) display_mode.w;
-	global_height = (float) display_mode.h;
+	global_width = 3840.f;
+	global_height = 2160.f;
 
 	int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
-#else
-	global_width = 1920.0f;
-	global_height = 1080.0f;
-
-	int flags = SDL_WINDOW_OPENGL;
-#endif
 #endif
 
 	global_aspect = global_height / global_width;
@@ -97,11 +90,23 @@ void Game::init ()
 	SDL_CreateThread (static_sdl_thread, "static_sdl_thread", this);
 }
 
-int global_power = 6;
-int global_power_width = 6;
+int global_power = 2;
+int global_power_width = 2;
+#include <logic/state.h>
+#ifdef __ANDROID__
+#include <jni.h>
+
+JNIEnv *global_env;
+#endif
+
+extern StateGame state_game;
+
 
 void Game::loop ()
 {
+#ifdef __ANDROID__
+	global_env = static_cast<JNIEnv *>(SDL_AndroidGetJNIEnv());
+#endif
 
 	int height = 270;
 	int width = 480;
@@ -110,29 +115,54 @@ void Game::loop ()
 		global_power++;
 	}
 
+	global_power_width = global_power;
+
+	state_game.load ();
+
+#if 0
 	while (width < global_height) {
 		width *= 2;
 		global_power_width++;
 	}
+#endif
 
 	level = new ILevel *[LEVEL_N];
 	level[LEVEL_LOGO] = new LevelLogo ();
 	level[LEVEL_SWAMP] = new LevelSwamp ();
+	level[LEVEL_MAP] = new LevelMap ();
+	level[LEVEL_HOME] = new LevelHome ();
 
-	global_cur_level = LEVEL_SWAMP;
 
-	level[global_cur_level]->load ();
+#if 1
+	for (int i = 0; i < LEVEL_N; i++) {
+		level[i]->load ();
+	}
+#endif
+
+    global_cur_level = LEVEL_LOGO;
+
+//	level[global_cur_level]->load ();
 
 	while (1) {
+		ILevel *lvl = level[global_cur_level];
+
 		const uint8_t *key = SDL_GetKeyboardState (nullptr);
 		if (key[SDL_SCANCODE_Q]) exit (0);
 
-		level[global_cur_level]->clear_screen (graphics);
+		lvl->clear_screen (graphics);
 
 		struct event *ev = nullptr;
 
 		
-		level[global_cur_level]->render ();
+		lvl->render ();
+
+		if (lvl->from != lvl->to) {
+			int level = lvl->to;
+			lvl->unload ();
+			global_cur_level = level;
+	//		level[global_cur_level]->load ();
+			continue;
+		}
 
 		graphics->render (this->win);
 		SDL_Delay (16);

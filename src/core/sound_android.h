@@ -1,10 +1,4 @@
-//
-// Created by cf on 5/14/22.
-//
-
-#ifndef ONE_IN_TAIGA_SOUND_ANDROID_H
-#define ONE_IN_TAIGA_SOUND_ANDROID_H
-
+#pragma once
 #include "sound.h"
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
@@ -14,7 +8,7 @@ class Sound_android: public Sound {
 public:
     Sound_android ();
     void init () override;
-    void set (char *file) override;
+    void set (char *file, int format, int freq) override;
     void play () override;
     void stop () override;
     bool is_no_play () override;
@@ -33,6 +27,3 @@ public:
 
     uint8_t *data;
 };
-
-
-#endif //ONE_IN_TAIGA_SOUND_ANDROID_H

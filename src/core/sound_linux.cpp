@@ -6,23 +6,39 @@ Sound_linux::Sound_linux ()
     size_b = 0;
 }
 
+static ALCdevice *device;
+static ALCcontext *ctx;
+
 void Sound_linux::init ()
 {
-    device = alcOpenDevice (nullptr);
-    ctx = alcCreateContext (device, nullptr);
-    alcMakeContextCurrent (ctx);
+	if (device == nullptr) {
+    		device = alcOpenDevice (nullptr);
+    		ctx = alcCreateContext (device, nullptr);
+    		alcMakeContextCurrent (ctx);
+	}
 }
 
 
 
-void Sound_linux::set (char *file)
+void Sound_linux::set (char *file, int format, int freq)
 {
     uint32_t buf;
     alGenBuffers (1, &buf);
+    switch (format) {
+	    case FORMAT_MONO:
+		    format = AL_FORMAT_MONO16;
+		    break;
+	    case FORMAT_STEREO:
+		    format = AL_FORMAT_STEREO16;
+		    break;
+    }
 
     size_t size;
     void *data = sound_get_data (file, &size);
-    alBufferData (buf, AL_FORMAT_STEREO16, data, size, 44100);
+    alBufferData (buf, format, data, size, freq);
+
+    int ret = alGetError ();
+    printf ("0: %d\n", ret);
 
     uint32_t source;
     alGenSources (1, &source);

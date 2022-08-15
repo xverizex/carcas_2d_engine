@@ -1,5 +1,5 @@
-#include "sound_android.h"
 #ifdef __ANDROID__
+#include "sound_android.h"
 #include <android/log.h>
 #include "SDL.h"
 #else
@@ -32,13 +32,13 @@ void Sound_android::init ()
 
 }
 
-void callback_player (SLPlayItf caller, void *ctx, uint32_t event)
+static void callback_player (SLPlayItf caller, void *ctx, uint32_t event)
 {
-    Sound *snd = (Sound *) ctx;
+    Sound_android *snd = (Sound_android *) ctx;
     snd->state = 1;
 }
 
-void Sound_android::set (char *file)
+void Sound_android::set (char *file, int format, int freq)
 {
     size_t pos = 0L;
     uint8_t *data = (uint8_t *) sound_get_data (file, &pos);
