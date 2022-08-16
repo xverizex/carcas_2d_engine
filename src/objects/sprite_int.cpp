@@ -77,7 +77,7 @@ void SpriteInt::set_size (float width, float height, float length)
         link->v[17] = 0;
 }
 
-void SpriteInt::calc_size (int _pow)
+void SpriteInt::calc_size (int _pow, int account_width_screen)
 {
 	int gheight = 270;
 	int pow = 2;
@@ -85,11 +85,19 @@ void SpriteInt::calc_size (int _pow)
 
 	int gh = global_height;
 
+	dec = 0;
+
 	while (gheight < standard) {
 		gheight *= 2;
 		pow++;
 	}
 	pow += _pow;
+	if (account_width_screen) {
+		while (link->width * pow > global_width) {
+			pow--;
+			dec--;
+		}
+	}
 
 	fact_width = link->width * pow;
 	fact_height = link->height * pow;

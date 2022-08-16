@@ -28,7 +28,7 @@ class Object {
 		virtual void set_length (float length) = 0;
 		virtual void set_size (float width, float height, float length) = 0;
 		virtual void rotate (int offset, float degree) = 0;
-		virtual void calc_size (int pow) = 0;
+		virtual void calc_size (int pow, int account_width_screen) = 0;
 		virtual void mirror_right () = 0;
 		virtual void mirror_left () = 0;
 		virtual void set_animate_range (int index, int start, int end) = 0;

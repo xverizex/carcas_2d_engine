@@ -13,7 +13,7 @@ class SpriteInt: public Object {
 		void set_length (float length) override;
 		void set_size (float width, float height, float length) override;
 		void rotate (int offset, float degree) override;
-		void calc_size (int _pow) override;
+		void calc_size (int _pow, int account_width_screen) override;
 		void set_animate_range (int index, int start, int end) override;
 		void play_once (int offset, int what) override;
 		void set_speed (int offset, int speeds) override;
@@ -40,4 +40,5 @@ class SpriteInt: public Object {
 		uint64_t t;
 		uint32_t trigger;
 		int power;
+		int dec;
 };
