@@ -216,3 +216,20 @@ Link *downloader_text_get_link (uint8_t *data, int max_width, int max_height)
 	gen_texture_from_buffer (link, data, max_width, max_height);
 	return link;
 }
+
+void downloader_free_all () {
+	for (int i = 0; i < LINKS_N; i++) {
+        if (link[i] != nullptr) {
+            glDeleteTextures(link[i]->size_tex, link[i]->tex);
+            link[i]->size_tex = 0;
+            link[i] = nullptr;
+        }
+
+	}
+}
+
+void downloader_load_all () {
+    for (int i = 0; i < LINKS_N; i++) {
+        downloader_load((enum TO_DOWNLOADS) i);
+    }
+}

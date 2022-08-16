@@ -7,9 +7,11 @@
 
 class LevelLogo: public ILevel {
 	public:
+	LevelLogo ();
 		void clear_screen (Graphics *) override;
 		void load () override;
 		void unload () override;
+		void load_links () override;
 		void handle_button (enum EVENT_TYPE type, int x, int y) override;
 		void render () override;
 

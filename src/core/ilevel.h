@@ -16,6 +16,7 @@ class ILevel {
         public:
                 virtual void clear_screen (Graphics *graphics) = 0;
                 virtual void load () = 0;
+				virtual void load_links () = 0;
 		virtual void unload () = 0;
                 virtual void handle_button (enum EVENT_TYPE type, int x, int y) = 0;
                 virtual void render () = 0;

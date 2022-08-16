@@ -57,6 +57,8 @@ static int static_sdl_thread (void *ptr)
 
 void Game::init ()
 {
+    this->ctx = nullptr;
+
 	SDL_Init (SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 #ifdef __ANDROID__
 	SDL_DisplayMode display_mode;
@@ -78,7 +80,7 @@ void Game::init ()
 
 	graphics = new OpenGLES ();
 
-	this->win = SDL_CreateWindow ("game",
+	this->win = SDL_CreateWindow ("fishing boy",
 			0, 0,
 			global_width,
 			global_height,
@@ -86,6 +88,7 @@ void Game::init ()
 			);
 
 	this->ctx = graphics->init (this->win);
+	SDL_GL_MakeCurrent(this->win, this->ctx);
 
 	SDL_CreateThread (static_sdl_thread, "static_sdl_thread", this);
 }
@@ -95,6 +98,7 @@ int global_power_width = 2;
 #include <logic/state.h>
 #ifdef __ANDROID__
 #include <jni.h>
+#include "../Transport/transport.h"
 
 JNIEnv *global_env;
 #endif
@@ -119,29 +123,42 @@ void Game::loop ()
 
 	state_game.load ();
 
-#if 0
-	while (width < global_height) {
-		width *= 2;
-		global_power_width++;
-	}
-#endif
-
 	level = new ILevel *[LEVEL_N];
 	level[LEVEL_LOGO] = new LevelLogo ();
 
 
-#if 1
-	for (int i = 0; i < LEVEL_N; i++) {
-		level[i]->load ();
-	}
-#endif
-
     global_cur_level = LEVEL_LOGO;
 
-//	level[global_cur_level]->load ();
+	uint64_t cur_time;
+	uint64_t to_switch;
+	bool switch_to_new_ctx = false;
+
+	level[global_cur_level]->load_links();
+	level[global_cur_level]->load();
+    bool is_resume = false;
+	bool is_first = true;
 
 	while (1) {
 		ILevel *lvl = level[global_cur_level];
+
+#ifdef __ANDROID__
+
+        if (transport_is_pause()) {
+            is_resume = true;
+        }
+
+        if (is_resume && transport_is_new_context()) {
+
+            downloader_free_all();
+			if (this->ctx) SDL_GL_DeleteContext(this->ctx);
+			this->ctx = graphics->init (this->win);
+			SDL_GL_MakeCurrent(this->win, this->ctx);
+
+            lvl->load_links();
+			lvl->load();
+            is_resume = false;
+        }
+#endif
 
 		const uint8_t *key = SDL_GetKeyboardState (nullptr);
 		if (key[SDL_SCANCODE_Q]) exit (0);
@@ -154,10 +171,12 @@ void Game::loop ()
 		lvl->render ();
 
 		if (lvl->from != lvl->to) {
-			int level = lvl->to;
+			int level_next = lvl->to;
 			lvl->unload ();
-			global_cur_level = level;
-	//		level[global_cur_level]->load ();
+			global_cur_level = level_next;
+			lvl = level[global_cur_level];
+			lvl->load_links();
+			lvl->load ();
 			continue;
 		}
 

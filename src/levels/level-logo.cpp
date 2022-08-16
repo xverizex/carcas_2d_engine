@@ -17,23 +17,32 @@ void LevelLogo::clear_screen (Graphics *graphics)
 	graphics->clear (0x4c, 0x4c, 0x4c, 0xff);
 }
 
+LevelLogo::LevelLogo() {
+    sound_logo = nullptr;
+	logo = new SpriteInt ();
+}
+
+void LevelLogo::load_links() {
+	logo->link = downloader_load (LINK_LOGO);
+	logo->set_texture_index(0);
+}
+
 void LevelLogo::load ()
 {
 	from = to = LEVEL_LOGO;
 //	global_language.set_language (LANG_RUS);
 
-	logo = new SpriteInt ();
 	logo->shader = global_shader[SHADER_MAIN_INT];
-	logo->link = downloader_load (LINK_LOGO);
 	logo->set_pos (0.0f, 0.0f, 0.0f);
-	logo->calc_size(3);
-	logo->set_texture_index(0);
+	logo->calc_size(3, 0);
+
 
 #ifdef __ANDROID__
-	sound_logo = new Sound_android ();
-	sound_logo->init ();
-	sound_logo->set ("logo.wav", FORMAT_MONO, 44100);
-
+    if (sound_logo == nullptr) {
+        sound_logo = new Sound_android ();
+        sound_logo->init ();
+        sound_logo->set ("logo.wav", FORMAT_MONO, 44100);
+    }
 #else
 	sound_logo = new Sound_linux ();
 	sound_logo->init ();
@@ -57,6 +66,7 @@ static uint64_t to_stop;
 
 void LevelLogo::render ()
 {
+
 	struct timeval tv_stage_0;
 	gettimeofday (&tv_stage_0, nullptr);
 	uint64_t ms = (tv_stage_0.tv_sec * 1000) + (tv_stage_0.tv_usec / 1000);
@@ -68,7 +78,7 @@ void LevelLogo::render ()
 	uint64_t diff_time = ms - cur_time;
 
 	to_stop += diff_time;
-
+// 9000
 	if (to_stop > 9000) {
 		to = LEVEL_MAP;
 	}
