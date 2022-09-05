@@ -80,7 +80,7 @@ void LevelLogo::render ()
 	to_stop += diff_time;
 // 9000
 	if (to_stop > 9000) {
-		to = LEVEL_MAP;
+		to = LEVEL_LOGO;
 	}
 
 	logo->render();

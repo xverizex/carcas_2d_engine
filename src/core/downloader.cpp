@@ -146,46 +146,6 @@ Link *downloader_load (const enum TO_DOWNLOADS file)
 			if (link[LINK_LOGO] == nullptr)
 				link[LINK_LOGO] = load_link (TO_STRING_FILENAME (LINK_LOGO));
 			break;
-		case LINK_SWAMP:
-			if (link[LINK_SWAMP] == nullptr)
-				link[LINK_SWAMP] = load_link (TO_STRING_FILENAME (LINK_SWAMP));
-			break;
-		case LINK_SUN:
-			if (link[LINK_SUN] == nullptr)
-				link[LINK_SUN] = load_link (TO_STRING_FILENAME (LINK_SUN));
-			break;
-		case LINK_CLOUDS:
-			if (link[LINK_CLOUDS] == nullptr)
-				link[LINK_CLOUDS] = load_link (TO_STRING_FILENAME (LINK_CLOUDS));
-			break;
-		case LINK_BOY:
-			if (link[LINK_BOY] == nullptr)
-				link[LINK_BOY] = load_link (TO_STRING_FILENAME (LINK_BOY));
-			break;
-		case LINK_FISH_LAY:
-			if (link[LINK_FISH_LAY] == nullptr)
-				link[LINK_FISH_LAY] = load_link (TO_STRING_FILENAME (LINK_FISH_LAY));
-			break;
-		case LINK_MAP:
-			if (link[LINK_MAP] == nullptr)
-				link[LINK_MAP] = load_link (TO_STRING_FILENAME (LINK_MAP));
-			break;
-		case LINK_HOME:
-			if (link[LINK_HOME] == nullptr)
-				link[LINK_HOME] = load_link (TO_STRING_FILENAME (LINK_HOME));
-			break;
-		case LINK_LETTER_FROM_POSTMAN:
-			if (link[LINK_LETTER_FROM_POSTMAN] == nullptr)
-				link[LINK_LETTER_FROM_POSTMAN] = load_link (TO_STRING_FILENAME (LINK_LETTER_FROM_POSTMAN));
-			break;
-		case LINK_TROFE:
-			if (link[LINK_TROFE] == nullptr)
-				link[LINK_TROFE] = load_link (TO_STRING_FILENAME (LINK_TROFE));
-			break;
-		case LINK_MESSAGE_WORMS:
-			if (link[LINK_MESSAGE_WORMS] == nullptr)
-				link[LINK_MESSAGE_WORMS] = load_link(TO_STRING_FILENAME(LINK_MESSAGE_WORMS));
-			break;
 		default:
 			break;
 	}

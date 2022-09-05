@@ -10,9 +10,6 @@
 #include <levels/levels.h>
 #include "ilevel.h"
 #include <levels/level-logo.h>
-#include <levels/level-swamp.h>
-#include <levels/level-map.h>
-#include <levels/level-home.h>
 #include <queue>
 #include "languages.h"
 
@@ -95,15 +92,11 @@ void Game::init ()
 
 int global_power = 2;
 int global_power_width = 2;
-#include <logic/state.h>
 #ifdef __ANDROID__
 #include <jni.h>
-#include "../Transport/transport.h"
 
 JNIEnv *global_env;
 #endif
-
-extern StateGame state_game;
 
 
 void Game::loop ()
@@ -120,8 +113,6 @@ void Game::loop ()
 	}
 
 	global_power_width = global_power;
-
-	state_game.load ();
 
 	level = new ILevel *[LEVEL_N];
 	level[LEVEL_LOGO] = new LevelLogo ();

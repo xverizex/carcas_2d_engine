@@ -2,11 +2,11 @@ cmake_minimum_required (VERSION 3.22)
 
 include (FindPkgConfig)
 
-project (fishing_boy VERSION 1.0)
+project (game VERSION 1.0)
 
 set (EXECUTABLE_OUTPUT_PATH ..)
 
-add_executable (fishing_boy 
+add_executable (game 
 	main.cpp
 	core/downloader.cpp
 	core/game.cpp
@@ -14,9 +14,7 @@ add_executable (fishing_boy
 	levels/level-logo.cpp
 	core/opengles.cpp
 	core/shaders.cpp
-	shaders/shader-simple-2d-opengl.cpp
 	shaders/shader-simple-2d-opengl_int.cpp
-	objects/sprite.cpp
 	objects/sprite_int.cpp
 	core/link-opengl.cpp
 	core/languages.cpp
@@ -28,7 +26,7 @@ pkg_check_modules (GL "glesv2")
 pkg_check_modules (FREETYPE "freetype2")
 pkg_check_modules (OPENAL "openal")
 
-include_directories (fishing_boy PUBLIC
+include_directories (game PUBLIC
 	"third_party/glm"
 	"."
 	${SDL2_INCLUDE_DIRS}
@@ -37,7 +35,7 @@ include_directories (fishing_boy PUBLIC
 	${OPENAL_INCLUDE_DIRS}
 	)
 
-target_link_libraries (fishing_boy PUBLIC
+target_link_libraries (game PUBLIC
 	${SDL2_LIBRARIES}
 	${GL_LIBRARIES}
 	${FREETYPE_LIBRARIES}
